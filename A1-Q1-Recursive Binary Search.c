@@ -7,7 +7,6 @@ int binarySearch(int arr[], int low, int high, int x) {
 
     int mid = low + (high - low) / 2;
 
-    // If element is present at the middle
     if (arr[mid] == x) {
         return mid;
     }
