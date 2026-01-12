@@ -7,7 +7,6 @@ int binarySearch(int arr[], int n, int x) {
     while (low <= high) {
         int mid = low + (high - low) / 2; 
 
-        // Check if x is present at mid
         if (arr[mid] == x) {
             return mid;
         }
@@ -20,7 +19,6 @@ int binarySearch(int arr[], int n, int x) {
         }
     }
 
-    // Element is not present
     return -1;
 }
 
