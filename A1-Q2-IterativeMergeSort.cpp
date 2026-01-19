@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 void Merge(int arr[], int l, int m, int r) {
     int n1 = m - l + 1;
     int n2 = r - m;
@@ -24,27 +25,31 @@ void Merge(int arr[], int l, int m, int r) {
     while (j < n2) arr[k++] = R[j++];
 }
 
-
 void IMergeSort(int A[], int n) {
-    int p, i, l, mid, h;
+    int curr_size;
+    int left_start;
 
-    for (p = 2; p <= n; p = p * 2) {
-        for (i = 0; i + p - 1 < n; i = i + p) {
-            l = i;
-            h = i + p - 1;
-            mid = (l + h) / 2;
-            Merge(A, l, mid, h);
+    for (curr_size = 1; curr_size <= n - 1; curr_size = 2 * curr_size) {
+        for (left_start = 0; left_start < n - 1; left_start += 2 * curr_size) {
+            
+            int mid = left_start + curr_size - 1;
+            
+            if (mid >= n - 1) continue;
+
+            int right_end = left_start + 2 * curr_size - 1;
+            if (right_end >= n) {
+                right_end = n - 1;
+            }
+
+            Merge(A, left_start, mid, right_end);
         }
     }
-
-    if (p / 2 < n)
-        Merge(A, 0, (p / 2), n - 1);
 }
 
 int main() {
     int n;
     printf("Enter the number of elements: ");
-    scanf("%d", &n);
+    if (scanf("%d", &n) != 1) return 1;
 
     int arr[n];
     printf("Enter %d integers: ", n);
@@ -58,4 +63,3 @@ int main() {
 
     return 0;
 }
-
