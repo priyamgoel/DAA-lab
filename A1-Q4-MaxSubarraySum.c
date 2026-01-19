@@ -1,48 +1,55 @@
 #include <stdio.h>
-#include <limits.h>
 
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
-int maxOfThree(int a, int b, int c) {
+int max3(int a, int b, int c) {
     return max(max(a, b), c);
 }
 
-int maxCrossingSum(int arr[], int low, int mid, int high) {
-    int left_sum = INT_MIN;
-    int sum = 0;
-    
-    for (int i = mid; i >= low; i--) {
-        sum = sum + arr[i];
-        if (sum > left_sum)
-            left_sum = sum;
-    }
+int ComputeMidL(int A[], int P, int m) {
+    int Sum = 0;
+    int maxSum = 0;
 
-    int right_sum = INT_MIN;
-    sum = 0;
-    
-    for (int i = mid + 1; i <= high; i++) {
-        sum = sum + arr[i];
-        if (sum > right_sum)
-            right_sum = sum;
+    for (int i = m; i >= P; i--) {
+        Sum += A[i];
+        if (Sum > maxSum) {
+            maxSum = Sum;
+        }
     }
-
-    return left_sum + right_sum;
+    return maxSum;
 }
 
-int maxSubArraySum(int arr[], int low, int high) {
-    if (low == high) {
-        return arr[low];
+int ComputeMidR(int A[], int m, int Q) {
+    int Sum = 0;
+    int maxSum = 0;
+
+    for (int i = m + 1; i <= Q; i++) {
+        Sum += A[i];
+        if (Sum > maxSum) {
+            maxSum = Sum;
+        }
+    }
+    return maxSum;
+}
+
+int MaxSum(int A[], int P, int Q) {
+    if (P == Q) {
+        return max(0, A[P]);
     }
 
-    int mid = (low + high) / 2;
+    int m = (P + Q) / 2;
 
-    return maxOfThree(
-        maxSubArraySum(arr, low, mid),
-        maxSubArraySum(arr, mid + 1, high),
-        maxCrossingSum(arr, low, mid, high)
-    );
+    int maxL = MaxSum(A, P, m);
+    int maxR = MaxSum(A, m + 1, Q);
+
+    int maxMidL = ComputeMidL(A, P, m);
+    int maxMidR = ComputeMidR(A, m, Q);
+
+    int maxMid = maxMidL + maxMidR;
+
+    return max3(maxL, maxR, maxMid);
 }
 
 int main() {
@@ -50,20 +57,19 @@ int main() {
 
     printf("Enter the number of elements: ");
     if (scanf("%d", &n) != 1 || n <= 0) {
-        printf("Invalid input size.\n");
         return 1;
     }
 
-    int arr[n];
+    int A[n];
 
-    printf("Enter %d integers:\n", n);
+    printf("Enter %d elements:\n", n);
     for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
+        scanf("%d", &A[i]);
     }
 
-    int max_sum = maxSubArraySum(arr, 0, n - 1);
-    
-    printf("Maximum Subarray Sum is: %d\n", max_sum);
+    int result = MaxSum(A, 0, n - 1);
+
+    printf("\nMaximum Sum Subarray is: %d\n", result);
 
     return 0;
 }
