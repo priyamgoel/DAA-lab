@@ -1,17 +1,17 @@
 #include <stdio.h>
 
 void swap(int* a, int* b) {
-    int temp = *a;
+    int t = *a;
     *a = *b;
-    *b = temp;
+    *b = t;
 }
 
 int partition(int arr[], int low, int high) {
-    int pivot = arr[high]; 
-    int i = (low - 1); 
+    int pivot = arr[high];
+    int i = (low - 1);
 
     for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
+        if (arr[j] <= pivot) {
             i++;
             swap(&arr[i], &arr[j]);
         }
@@ -20,51 +20,54 @@ int partition(int arr[], int low, int high) {
     return (i + 1);
 }
 
-void quickSortIterative(int arr[], int low, int high) {
-    int size = high - low + 1;
-    int stack[size];
-
+void iterativeQuickSort(int arr[], int n) {
+    int stack[2 * n];
     int top = -1;
 
-    stack[++top] = low;
-    stack[++top] = high;
+    top++;
+    stack[top] = 0;
+    top++;
+    stack[top] = n - 1;
 
     while (top >= 0) {
-        high = stack[top--];
-        low = stack[top--];
+        int high = stack[top];
+        top--;
+        int low = stack[top];
+        top--;
 
-        int p = partition(arr, low, high);
+        int m = partition(arr, low, high);
 
-        if (p - 1 > low) {
-            stack[++top] = low;
-            stack[++top] = p - 1;
+        if (m - 1 > low) {
+            top++;
+            stack[top] = low;
+            top++;
+            stack[top] = m - 1;
         }
 
-        if (p + 1 < high) {
-            stack[++top] = p + 1;
-            stack[++top] = high;
+        if (m + 1 < high) {
+            top++;
+            stack[top] = m + 1;
+            top++;
+            stack[top] = high;
         }
     }
 }
 
 int main() {
     int n;
-
-    printf("Enter the number of elements: ");
-    if (scanf("%d", &n) != 1 || n <= 0) {
-        return 1;
-    }
+    printf("Enter the size of the array: ");
+    scanf("%d", &n);
 
     int arr[n];
 
-    printf("Enter %d integers:\n", n);
+    printf("Enter the elements of the array: ");
     for (int i = 0; i < n; i++) {
         scanf("%d", &arr[i]);
     }
 
-    quickSortIterative(arr, 0, n - 1);
+    iterativeQuickSort(arr, n);
 
-    printf("Sorted array: \n");
+    printf("Sorted array: ");
     for (int i = 0; i < n; i++) {
         printf("%d ", arr[i]);
     }
